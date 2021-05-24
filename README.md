@@ -1,7 +1,7 @@
 # tango_test_task
 Tango test task repo
 
-Deployment ot the gcp cloud run with redis: 
+Deployment to the gcp cloud run with redis: 
 <br> ./deployment.sh
 or follow commands:
 1) gcloud builds submit --tag gcr.io/regal-state-230718/tango-test-task
