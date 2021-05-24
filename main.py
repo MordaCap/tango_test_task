@@ -1,5 +1,5 @@
 import os
-from flask import Flask, url_for
+from flask import Flask
 from cachetools import TTLCache
 import redis
 
@@ -15,15 +15,24 @@ app = Flask(__name__)
 
 def cache(func):
     def store_cache(uid):
-        ttl_cache['uid'] = (uid, uid[::-1])
-        redis_client.set('uid', (uid, uid[::-1]))
+        ttl_cache['uid'] = f'{uid}, {uid[::-1]}'
+        redis_client.set('uid', f'{uid}, {uid[::-1]}')
         result = func(uid)
         return result
     return store_cache
 
 
 def get_cache():
-    return redis_client.get('uid'), ttl_cache.get('uid')
+    if ttl_cache.get('uid'):
+        return ttl_cache.get('uid')
+    else:
+        ttl_cache['uid'] = redis_client.get('uid')
+        return redis_client.get('uid')
+
+
+@app.route('/')
+def hello():
+    return 'Hello'
 
 
 @app.route('/ping', methods=['GET'])
@@ -43,7 +52,4 @@ def get_test():
 
 
 if __name__ == '__main__':
-    # This is used when running locally. Gunicorn is used to run the
-    # application on Google App Engine and Cloud Run.
-    # See entrypoint in app.yaml or Dockerfile.
     app.run(host='0.0.0.0', port=5000, debug=True)
