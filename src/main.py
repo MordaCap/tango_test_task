@@ -1,37 +1,50 @@
-# Copyright 2018 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-# [START gae_python38_app]
-# [START gae_python3_app]
-from flask import Flask
+import os
+from flask import Flask, url_for
+from cachetools import TTLCache
+import redis
 
 
-# If `entrypoint` is not defined in app.yaml, App Engine will look for an app
-# called `app` in `main.py`.
+redis_host = os.environ.get('REDISHOST', 'localhost')
+redis_port = int(os.environ.get('REDISPORT', 6379))
+redis_client = redis.Redis(host=redis_host, port=redis_port)
+
+ttl_cache = TTLCache(maxsize=100, ttl=5)
+
 app = Flask(__name__)
+# tell Flask to use the above defined config
 
 
-@app.route('/')
-def hello():
-    """Return a friendly HTTP greeting."""
-    return 'Hello World!'
+def cache(func):
+    def store_cache(uid):
+        ttl_cache['uid'] = (uid, uid[::-1])
+        redis_client.set('uid', (uid, uid[::-1]))
+        result = func(uid)
+        return result
+    return store_cache
+
+
+def get_cache():
+    return redis_client.get('uid'), ttl_cache.get('uid')
+
+
+@app.route('/ping', methods=['GET'])
+def ping():
+    return 'pong'
+
+
+@app.route('/test/<uid>', methods=['POST'])
+@cache
+def test(uid):
+    return uid
+
+
+@app.route('/get_test', methods=['GET'])
+def get_test():
+    return f'{get_cache()}'
 
 
 if __name__ == '__main__':
-    # This is used when running locally only. When deploying to Google App
-    # Engine, a webserver process such as Gunicorn will serve the app. This
-    # can be configured by adding an `entrypoint` to app.yaml.
+    # This is used when running locally. Gunicorn is used to run the
+    # application on Google App Engine and Cloud Run.
+    # See entrypoint in app.yaml or Dockerfile.
     app.run(host='0.0.0.0', port=5000, debug=True)
-# [END gae_python3_app]
-# [END gae_python38_app]
