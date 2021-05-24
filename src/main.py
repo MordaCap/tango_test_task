@@ -11,7 +11,6 @@ redis_client = redis.Redis(host=redis_host, port=redis_port)
 ttl_cache = TTLCache(maxsize=100, ttl=5)
 
 app = Flask(__name__)
-# tell Flask to use the above defined config
 
 
 def cache(func):
