@@ -15,17 +15,27 @@ or follow commands:
    
 <br><br>
 
--> curl -X GET https://tango-api-okdpdxpega-uc.a.run.app/ping
--> pong
+-> curl -X GET https://tango-test-task-end-okdpdxpega-uc.a.run.app
+Hello
+
+-> curl -X GET https://tango-test-task-end-okdpdxpega-uc.a.run.app/ping
+pong
 
 (failed with connection refused by redis)
--> curl -X POST https://tango-api-okdpdxpega-uc.a.run.app/test/user_id
+-> curl -X POST https://tango-test-task-end-okdpdxpega-uc.a.run.app/test/user_id
 
--> <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 500 Internal Server Error
 Internal Server Error
 The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
 
+(failed with connection refused by redis)
+-> curl -X GET https://tango-test-task-end-okdpdxpega-uc.a.run.app/get_test
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+500 Internal Server Error
+Internal Server Error
+The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
 
 
 
