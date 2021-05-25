@@ -24,6 +24,8 @@ pong
 (failed with connection refused by redis)
 -> curl -X POST https://tango-test-task-end-okdpdxpega-uc.a.run.app/test/user_id
 
+(ERROR LOG: ConnectionError(SERVER_CLOSED_CONNECTION_ERROR) redis.exceptions.ConnectionError: Connection closed by server.)
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 500 Internal Server Error
 Internal Server Error
@@ -37,5 +39,6 @@ The server encountered an internal error and was unable to complete your request
 Internal Server Error
 The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
 
+(ERROR LOG: ConnectionError(SERVER_CLOSED_CONNECTION_ERROR) redis.exceptions.ConnectionError: Connection closed by server.)
 
 
