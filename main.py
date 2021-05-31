@@ -24,10 +24,10 @@ def cache(func):
 
 def get_cache():
     if ttl_cache.get('uid'):
-        return f"ttl_cache: ttl_cache.get('uid')"
+        return f"ttl_cache: {ttl_cache.get('uid')}"
     else:
         ttl_cache['uid'] = redis_client.get('uid')
-        return f"redis_cache: redis_client.get('uid')"
+        return f"redis_cache: {redis_client.get('uid')}"
 
 
 @app.route('/')
