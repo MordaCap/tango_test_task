@@ -4,41 +4,37 @@ Tango test task repo
 Deployment to the gcp cloud run with redis: 
 <br> ./deployment.sh
 or follow commands:
-1) gcloud builds submit --tag gcr.io/regal-state-230718/tango-test-task
+1) gcloud builds submit --tag gcr.io/regal-state-230718/tango-test
 2) gcloud run deploy \                                                 
---image gcr.io/regal-state-230718/tango-test-task \
+--image gcr.io/regal-state-230718/tango-test \
 --platform managed \
 --allow-unauthenticated \
 --region us-central1 \
 --vpc-connector redis-connect \
---set-env-vars REDISHOST=10.206.9.131,REDISPORT=6378
+--set-env-vars REDISHOST=10.108.243.219,REDISPORT=6379
    
 <br><br>
 
--> curl -X GET https://tango-test-task-end-okdpdxpega-uc.a.run.app
+-> curl -X GET https://gcp-tango-okdpdxpega-uc.a.run.app/
 Hello
 
--> curl -X GET https://tango-test-task-end-okdpdxpega-uc.a.run.app/ping
+-> curl -X GET https://gcp-tango-okdpdxpega-uc.a.run.app/ping
 pong
 
-(failed with connection refused by redis)
 -> curl -X POST https://tango-test-task-end-okdpdxpega-uc.a.run.app/test/user_id
+user_id
 
-(ERROR LOG: ConnectionError(SERVER_CLOSED_CONNECTION_ERROR) redis.exceptions.ConnectionError: Connection closed by server.)
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
-500 Internal Server Error
-Internal Server Error
-The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
-
-(failed with connection refused by redis)
 -> curl -X GET https://tango-test-task-end-okdpdxpega-uc.a.run.app/get_test
+ttl_cache: b'user_id, di_resu'
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
-500 Internal Server Error
-Internal Server Error
-The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+(5 sec) 
+-> curl -X GET https://tango-test-task-end-okdpdxpega-uc.a.run.app/get_test
+redis_cache: b'user_id, di_resu'
 
-(ERROR LOG: ConnectionError(SERVER_CLOSED_CONNECTION_ERROR) redis.exceptions.ConnectionError: Connection closed by server.)
+(~2 sec) 
+-> curl -X GET https://tango-test-task-end-okdpdxpega-uc.a.run.app/get_test
+ttl_cache: b'user_id, di_resu'
 
-
+(5 sec) 
+-> curl -X GET https://tango-test-task-end-okdpdxpega-uc.a.run.app/get_test
+redis_cache: b'user_id, di_resu'
